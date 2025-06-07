@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SGPA Calculator - PESU</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e9f5ff;
+      color: #002147;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #002147;
+    }
+    table {
+      width: 95%;
+      max-width: 1000px;
+      margin: auto;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #cce0f5;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background: #002147;
+      color: white;
+    }
+    input[type="number"] {
+      width: 60px;
+      padding: 4px;
+    }
+    select {
+      padding: 4px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #002147;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    #result {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h2>SGPA Calculator (PESU Style)</h2>
+
+<table id="marksTable">
+  <thead>
+    <tr>
+      <th>Course</th>
+      <th>ISA 1</th>
+      <th>ISA 2</th>
+      <th>Assignment</th>
+      <th>ESA</th>
+      <th>Credits</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Auto-generate 6 rows -->
+    <script>
+      for (let i = 1; i <= 6; i++) {
+        document.write(`
+          <tr>
+            <td>Course ${i}</td>
+            <td><input type="number" min="0" max="40" class="isa1" /></td>
+            <td><input type="number" min="0" max="40" class="isa2" /></td>
+            <td><input type="number" min="0" max="10" class="assignment" /></td>
+            <td><input type="number" min="0" max="100" class="esa" /></td>
+            <td>
+              <select class="credit">
+                <option value="4" selected>4</option>
+                <option value="5">5</option>
+                <option value="2">2</option>
+              </select>
+            </td>
+          </tr>
+        `);
+      }
+    </script>
+  </tbody>
+</table>
+
+<div style="text-align:center;">
+  <button onclick="calculateSGPA()">Calculate SGPA</button>
+</div>
+
+<div id="result"></div>
+
+<script>
+  function calculateSGPA() {
+    const isa1 = document.querySelectorAll('.isa1');
+    const isa2 = document.querySelectorAll('.isa2');
+    const assignments = document.querySelectorAll('.assignment');
+    const esas = document.querySelectorAll('.esa');
+    const creditsList = document.querySelectorAll('.credit');
+
+    let totalGradePoints = 0;
+    let totalCredits = 0;
+
+    for (let i = 0; i < isa1.length; i++) {
+      const m1 = Number(isa1[i].value);
+      const m2 = Number(isa2[i].value);
+      const asg = Number(assignments[i].value || 0);
+      const esa = Number(esas[i].value);
+      const credit = Number(creditsList[i].value);
+
+      if (isNaN(m1) || isNaN(m2) || isNaN(esa)) continue;
+
+      let totalMarks = 0;
+
+      if (credit === 5) {
+        totalMarks = (m1 + m2) / 2 + asg + (esa + 20) / 2;
+      } else if (credit === 4) {
+        totalMarks = (m1 + m2) / 2 + asg + esa / 2;
+      } else if (credit === 2) {
+        totalMarks = ((m1 + m2) * 50 / 60) + (esa * 50 / 60);
+      }
+
+      let gradePoint = 0;
+      if (totalMarks >= 90) gradePoint = 10;
+      else if (totalMarks >= 80) gradePoint = 9;
+      else if (totalMarks >= 70) gradePoint = 8;
+      else if (totalMarks >= 60) gradePoint = 7;
+      else if (totalMarks >= 50) gradePoint = 6;
+      else if (totalMarks >= 40) gradePoint = 5;
+      else gradePoint = 0;
+
+      totalGradePoints += gradePoint * credit;
+      totalCredits += credit;
+    }
+
+    const sgpa = totalCredits > 0 ? (totalGradePoints / totalCredits).toFixed(2) : 'N/A';
+    document.getElementById('result').innerText = `Your SGPA is: ${sgpa}`;
+  }
+</script>
+
+</body>
+</html>
