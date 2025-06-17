@@ -127,11 +127,11 @@
       let totalMarks = 0;
 
       if (credit === 5) {
-        totalMarks = (m1 + m2) / 2 + asg + (esa + 20) / 2;
+        totalMarks = (((m1+m2)/2 + asg + esa/2 + 20 )/120 )*100;
       } else if (credit === 4) {
         totalMarks = (m1 + m2) / 2 + asg + esa / 2;
       } else if (credit === 2) {
-        totalMarks = ((m1 + m2) * 50 / 60) + (esa * 50 / 60);
+        totalMarks = ((m1 + m2) * 50 / 60) + (esa);
       }
 
       let gradePoint = 0;
